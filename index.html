@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitación de Boda</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(270deg, #1a1a2e, #16213e, #1f4068, #e94560);
+            background-size: 800% 800%;
+            animation: gradientBG 20s ease infinite;
+            color: white;
+            text-align: center;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Pantalla de bienvenida */
+        #welcome {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 10;
+            transition: opacity 1.5s ease;
+        }
+
+        #welcome h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        #welcome button {
+            padding: 15px 35px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 50px;
+            background: #e94560;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        #welcome button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255,255,255,0.5);
+        }
+
+        .container {
+            padding: 40px 20px;
+            max-width: 900px;
+            margin: auto;
+            animation: fadeIn 2s ease;
+        }
+
+        h1.names {
+            font-family: 'Great Vibes', cursive;
+            font-size: 4em;
+            margin: 20px 0;
+        }
+
+        .section {
+            margin: 60px 0;
+        }
+
+        .countdown {
+            font-size: 2em;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .buttons button {
+            margin: 10px;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 30px;
+            background: #ffffff;
+            color: #e94560;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .buttons button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(255,255,255,0.5);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .story {
+            font-size: 1.2em;
+            line-height: 1.8em;
+            max-width: 700px;
+            margin: auto;
+        }
+
+        footer {
+            margin: 40px 0;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Pantalla de bienvenida -->
+<div id="welcome">
+    <h1>¡Estás Invitado!</h1>
+    <button onclick="openInvitation()">Abrir Invitación</button>
+</div>
+
+<canvas id="particles"></canvas>
+
+<div class="container">
+    <h2>Nos Casamos</h2>
+    <h1 class="names">Cristal & Erick</h1>
+
+    <div class="section">
+        <p>Con la bendición de nuestras familias</p>
+        <p>Te invitamos a celebrar con nosotros este día tan especial</p>
+        <p><strong>20 de Junio de 2026 - 4:00 PM</strong></p>
+        <p>La Casa De Jepeto</p>
+    </div>
+
+    <div class="section">
+        <h2>Faltan</h2>
+        <div class="countdown" id="countdown"></div>
+    </div>
+
+    <div class="section">
+        <h2>Nuestra Historia</h2>
+        <p class="story">
+            Nuestra historia comenzó con una mirada y con el tiempo se transformó
+            en un amor profundo e inquebrantable. Hoy queremos compartir contigo
+            el inicio de esta nueva etapa en nuestras vidas.
+        </p>
+    </div>
+
+    <div class="section buttons">
+        <button onclick="confirmarAsistencia()">Confirmar Asistencia</button>
+        <button onclick="verUbicacion()">Ver Ubicación</button>
+        <button onclick="agregarCalendario()">Agregar al Calendario</button>
+    </div>
+
+    <footer>
+        ¡Esperamos contar con tu presencia!
+    </footer>
+</div>
+
+<audio id="musica" loop>
+    <source src="musica.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    // Abrir invitación
+    function openInvitation() {
+        const welcome = document.getElementById("welcome");
+        welcome.style.opacity = "0";
+        setTimeout(() => welcome.style.display = "none", 1500);
+        document.getElementById("musica").play();
+        lanzarFuegosArtificiales();
+    }
+
+    // Contador regresivo
+    const weddingDate = new Date("2026-11-15T16:00:00").getTime();
+    const countdownElement = document.getElementById("countdown");
+
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = weddingDate - now;
+
+        if (distance <= 0) {
+            countdownElement.innerHTML = "¡Hoy es el gran día!";
+            return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((distance / (1000 * 60)) % 60);
+        const seconds = Math.floor((distance / 1000) % 60);
+
+        countdownElement.innerHTML =
+            `${days} días ${hours} horas ${minutes} minutos ${seconds} segundos`;
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // RSVP por WhatsApp
+    function confirmarAsistencia() {
+        const telefono = "526641234567"; // Cambiar por tu número
+        const mensaje = encodeURIComponent("¡Confirmo mi asistencia a su boda!");
+        window.open(`https://wa.me/${telefono}?text=${mensaje}`, "_blank");
+    }
+
+    // Ubicación
+    function verUbicacion() {
+        window.open("https://maps.google.com", "_blank"); // Cambiar por tu enlace
+    }
+
+    // Agregar al calendario
+    function agregarCalendario() {
+        const inicio = "20261115T160000";
+        const fin = "20261115T230000";
+        const titulo = encodeURIComponent("Boda de María y Juan");
+        const ubicacion = encodeURIComponent("Jardín Los Olivos");
+
+        const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${titulo}&dates=${inicio}/${fin}&location=${ubicacion}`;
+        window.open(url, "_blank");
+    }
+
+    // Partículas y fuegos artificiales
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    let particles = [];
+
+    function lanzarFuegosArtificiales() {
+        for (let i = 0; i < 100; i++) {
+            particles.push({
+                x: canvas.width / 2,
+                y: canvas.height / 2,
+                angle: Math.random() * 2 * Math.PI,
+                speed: Math.random() * 5 + 2,
+                radius: Math.random() * 3 + 1,
+                life: 100
+            });
+        }
+    }
+
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        particles.forEach((p, index) => {
+            p.x += Math.cos(p.angle) * p.speed;
+            p.y += Math.sin(p.angle) * p.speed;
+            p.life--;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+            ctx.fill();
+
+            if (p.life <= 0) {
+                particles.splice(index, 1);
+            }
+        });
+
+        requestAnimationFrame(animateParticles);
+    }
+
+    animateParticles();
+</script>
+
+</body>
+</html>
