@@ -217,22 +217,22 @@
 
     // RSVP por WhatsApp
     function confirmarAsistencia() {
-        const telefono = "6631273676"; // Cambiar por tu número
-        const mensaje = encodeURIComponent("¡Confirmo mi asistencia a su boda!");
+        const telefono = "526631273676"; // Cambiar por tu número
+        const mensaje = encodeURIComponent("¿Pero que vamos a comer?");
         window.open(`https://wa.me/${telefono}?text=${mensaje}`, "_blank");
     }
 
     // Ubicación
     function verUbicacion() {
-        window.open("https://maps.google.com", "_blank"); // Cambiar por tu enlace
+        window.open("https://maps.app.goo.gl/e7GbHFjfvRFnYvb59", "_blank"); // Cambiar por tu enlace
     }
 
     // Agregar al calendario
     function agregarCalendario() {
         const inicio = "20261115T160000";
         const fin = "20261115T230000";
-        const titulo = encodeURIComponent("Boda de María y Juan");
-        const ubicacion = encodeURIComponent("Jardín Los Olivos");
+        const titulo = encodeURIComponent("Boda de Cristal & Erick");
+        const ubicacion = encodeURIComponent("La Casa De Jepeto");
 
         const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${titulo}&dates=${inicio}/${fin}&location=${ubicacion}`;
         window.open(url, "_blank");
